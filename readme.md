@@ -1,4 +1,5 @@
-###Анализ изначальной функции
+### Анализ изначальной функции
+
 ```c
 #include <cstddef>
 #include <cstdint>
@@ -19,9 +20,12 @@ int main(){
 ```
 В данной функции randomfill только один цикл. У него нет инварианта, а так же каждая итерация зависит от результата предидущей (переменная x).
 При компиляции `g++ -O3 -fopt-info-vec-all main.cpp` выдает следующий ответ:
-> 6: 11: missed: couldn't vectorize loop
+>6: 11: missed: couldn't vectorize loop
+
 >7: 15: missed: not vectorized: unsupported use in stmt.
+
 >5: 6: note: vectorized 0 loops in function.
+
 >12: 5: note: vectorized 0 loops in function.
 
 То есть как раз из-за того, что в каждой итерации используется x из предидущей g++ не может векторизовать цикл. Это и есть`unsupported use in stmt`.
@@ -74,12 +78,19 @@ int main(){
 ```
 При компиляции командой `g++ -O3 -fopt-info-vec-all main.cpp`  получаем следующий вывод:
 >26: 42: missed: couldn't vectorize loop
-27: 15: missed: not vectorized: unsupported use in stmt.
-18: 26: missed: couldn't vectorize loop
-21: 24: missed: not vectorized: complicated access pattern.
-20: 30: optimized: loop vectorized using 16 byte vectors
-12: 26: missed: couldn't vectorize loop
-13: 33: missed: not vectorized, possible dependence between data-refs *powers.1_37[_11] and *powers.1_37[i_72]
+
+>27: 15: missed: not vectorized: unsupported use in stmt.
+
+>18: 26: missed: couldn't vectorize loop
+
+>21: 24: missed: not vectorized: complicated access pattern.
+
+>20: 30: optimized: loop vectorized using 16 byte vectors
+
+>12: 26: missed: couldn't vectorize loop
+
+>13: 33: missed: not vectorized, possible dependence between data-refs *powers.1_37[_11] and *powers.1_37[i_72]
+
 >5: 6: note: vectorized 1 loops in function.
 
 Таким образом мы получили функцию, которая лучше поддается векторизации, а следовательно работает эффективнее. Она задействует дополнительную память, но в пренебрежимо малых размерах. 
