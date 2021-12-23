@@ -28,4 +28,5 @@ word = 0x0000785C кладет \x в обратном порядке, так к�
 >12: 5: optimized: loop vectorized using 16 byte vectors
 >
 >11: 6: note: vectorized 1 loops in function.
+
 Таким образом функция векторизируется. 
